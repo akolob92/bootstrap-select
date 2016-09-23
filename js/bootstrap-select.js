@@ -1188,9 +1188,14 @@
       }
 
       if (disabled) {
-        $lis.addClass('disabled').children('a').attr('href', '#').attr('tabindex', -1).attr('aria-disabled', true);
+        $lis.addClass('disabled').children('a').addClass('disabled')
+            .attr('href', '#')
+            .attr('tabindex', -1)
+            .attr('aria-disabled', true);
       } else {
-        $lis.removeClass('disabled').children('a').removeAttr('href').attr('tabindex', 0).attr('aria-disabled', false);
+        $lis.addClass('disabled').children('a').removeClass('disabled').removeAttr('href')
+            .attr('tabindex', 0)
+            .attr('aria-disabled', false);
       }
     },
 
