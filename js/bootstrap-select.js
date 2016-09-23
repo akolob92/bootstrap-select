@@ -1169,7 +1169,7 @@
             .attr('tabindex', -1)
             .attr('aria-disabled', true);
       } else {
-        $lis.addClass('disabled').children('a').removeClass('disabled').removeAttr('href')
+        $lis.removeClass('disabled').children('a').removeClass('disabled').removeAttr('href')
             .attr('tabindex', 0)
             .attr('aria-disabled', false);
       }
