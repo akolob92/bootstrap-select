@@ -388,14 +388,8 @@
 
       if (this.options.dropdownAlignRight === true) this.$menu.addClass('dropdown-menu-right');
 
-      if (typeof id !== 'undefined') {
-        this.$button.attr('data-id', id);
-        $('label[for="' + id + '"]').click(function (e) {
-          e.preventDefault();
-          that.$button.focus();
-        });
-      }
-
+      this.setButtonId();
+      this.addLabelEvents();
       this.checkDisabled();
       this.clickListener();
       if (this.options.liveSearch) this.liveSearchListener();
@@ -516,6 +510,36 @@
 
       $drop.find('ul')[0].innerHTML = li;
       return $drop;
+    },
+
+    setButtonId: function() {
+      var id = this.$element.attr('id');
+
+      if (typeof id !== 'undefined') {
+        this.$button.attr('data-id', id);
+      }
+    },
+
+    addLabelEvents: function() {
+      var that = this,
+          id = this.$element.attr('id');
+
+      this._setFocus = function(e) {
+        e.preventDefault();
+        that.$button.focus();
+      };
+
+      if (typeof id !== 'undefined') {
+        $('label[for="' + id + '"]').click(this._setFocus);
+      }
+    },
+
+    removeLabelEvents: function () {
+      var id = this.$element.attr('id');
+
+      if (typeof id !== 'undefined' && this._setFocus) {
+        $('label[for="' + id + '"]').off('click', this._setFocus);
+      }
     },
 
     reloadLi: function () {
@@ -1775,8 +1799,11 @@
     refresh: function () {
       this.$lis = null;
       this.liObj = {};
+      this.removeLabelEvents();
       this.reloadLi();
       this.render();
+      this.setButtonId();
+      this.addLabelEvents();
       this.checkDisabled();
       this.liHeight(true);
       this.setStyle();
