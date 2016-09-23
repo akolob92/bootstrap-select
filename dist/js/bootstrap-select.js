@@ -353,7 +353,7 @@
     doneButtonText: 'Close',
     multipleSeparator: ', ',
     styleBase: 'btn',
-    style: 'btn-default',
+    style: 'btn-secondary',
     size: 'auto',
     title: null,
     selectedTextFormat: 'values',
@@ -411,14 +411,8 @@
 
       if (this.options.dropdownAlignRight === true) this.$menu.addClass('dropdown-menu-right');
 
-      if (typeof id !== 'undefined') {
-        this.$button.attr('data-id', id);
-        $('label[for="' + id + '"]').click(function (e) {
-          e.preventDefault();
-          that.$button.focus();
-        });
-      }
-
+      this.setButtonId();
+      this.addLabelEvents();
       this.checkDisabled();
       this.clickListener();
       if (this.options.liveSearch) this.liveSearchListener();
@@ -494,10 +488,10 @@
       var actionsbox = this.multiple && this.options.actionsBox ?
       '<div class="bs-actionsbox">' +
       '<div class="btn-group btn-group-sm btn-block">' +
-      '<button type="button" class="actions-btn bs-select-all btn btn-default">' +
+      '<button type="button" class="actions-btn bs-select-all btn btn-secondary">' +
       this.options.selectAllText +
       '</button>' +
-      '<button type="button" class="actions-btn bs-deselect-all btn btn-default">' +
+      '<button type="button" class="actions-btn bs-deselect-all btn btn-secondary">' +
       this.options.deselectAllText +
       '</button>' +
       '</div>' +
@@ -506,7 +500,7 @@
       var donebutton = this.multiple && this.options.doneButton ?
       '<div class="bs-donebutton">' +
       '<div class="btn-group btn-block">' +
-      '<button type="button" class="btn btn-sm btn-default">' +
+      '<button type="button" class="btn btn-sm btn-secondary">' +
       this.options.doneButtonText +
       '</button>' +
       '</div>' +
@@ -539,6 +533,36 @@
 
       $drop.find('ul')[0].innerHTML = li;
       return $drop;
+    },
+
+    setButtonId: function() {
+      var id = this.$element.attr('id');
+
+      if (typeof id !== 'undefined') {
+        this.$button.attr('data-id', id);
+      }
+    },
+
+    addLabelEvents: function() {
+      var that = this,
+          id = this.$element.attr('id');
+
+      this._setFocus = function(e) {
+        e.preventDefault();
+        that.$button.focus();
+      };
+
+      if (typeof id !== 'undefined') {
+        $('label[for="' + id + '"]').click(this._setFocus);
+      }
+    },
+
+    removeLabelEvents: function () {
+      var id = this.$element.attr('id');
+
+      if (typeof id !== 'undefined' && this._setFocus) {
+        $('label[for="' + id + '"]').off('click', this._setFocus);
+      }
     },
 
     reloadLi: function () {
@@ -584,6 +608,7 @@
        * @returns {string}
        */
       var generateA = function (text, classes, inline, tokens) {
+        classes = classes && classes.indexOf('dropdown-item') === -1 ? classes + ' dropdown-item' : 'dropdown-item ';
         return '<a tabindex="0"' +
             (typeof classes !== 'undefined' ? ' class="' + classes + '"' : '') +
             (inline ? ' style="' + inline + '"' : '') +
@@ -1797,8 +1822,11 @@
     refresh: function () {
       this.$lis = null;
       this.liObj = {};
+      this.removeLabelEvents();
       this.reloadLi();
       this.render();
+      this.setButtonId();
+      this.addLabelEvents();
       this.checkDisabled();
       this.liHeight(true);
       this.setStyle();
