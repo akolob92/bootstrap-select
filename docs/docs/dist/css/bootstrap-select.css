@@ -43,6 +43,7 @@ select.selectpicker {
   z-index: 2;
 }
 .has-error .bootstrap-select .dropdown-toggle,
+.has-danger .bootstrap-select .dropdown-toggle,
 .error .bootstrap-select .dropdown-toggle {
   border-color: #b94a48;
 }
