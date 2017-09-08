@@ -268,8 +268,10 @@ select.selectpicker {
 
   &.show-tick .dropdown-menu li {
     &.selected a span.check-mark {
+      z-index: 9999;
       position: absolute;
       display: inline-block;
+      top: 0;
       right: 15px;
       margin-top: 5px;
     }
